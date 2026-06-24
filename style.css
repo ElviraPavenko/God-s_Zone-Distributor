@@ -1,0 +1,323 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    min-height: 100vh;
+    padding: 30px;
+    font-family: "Alan Sans", sans-serif;
+    background: url(./img/IMG_4428.JPG) center/cover no-repeat;
+    overflow: hidden;
+}
+
+/* Фоновый логотип */
+
+.logo {
+    position: fixed;
+    inset: 0;
+    width: 100vw;
+    height: 100vh;
+    object-fit: cover;
+    opacity: 0.08;
+    pointer-events: none;
+    z-index: 0;
+}
+
+/* Интерфейс поверх логотипа */
+
+.title,
+.control-panel,
+.participants-panel,
+.modal {
+    position: relative;
+    z-index: 1;
+}
+
+/* Заголовок */
+
+.title {
+    text-align: center;
+    font-size: 95px;
+    color: #1E5A59;
+    text-shadow: 2px 2px 4px #1E5A59;
+    margin-bottom: 30px;
+}
+
+/* Основной блок */
+
+.top-layout {
+    display: flex;
+    gap: 25px;
+    align-items: flex-start;
+}
+
+/* Левая панель */
+
+.control-panel {
+    width: 420px;
+    flex-shrink: 0;
+    background: rgba(0, 0, 0, 0.22);
+    backdrop-filter: blur(12px);
+    border-radius: 20px;
+    padding: 25px;
+    box-shadow: 0 0 25px rgba(0, 0, 0, .25);
+}
+
+/* Поле ввода */
+
+.input-row {
+    display: flex;
+    gap: 10px;
+}
+
+.input-row input {
+    flex: 1;
+}
+
+/* Все input */
+
+input {
+    padding: 15px;
+    border: none;
+    border-radius: 10px;
+
+    font-size: 18px;
+    font-family: "Alan Sans", sans-serif;
+}
+
+/* Все кнопки */
+
+button {
+    border: none;
+    cursor: pointer;
+    color: white;
+    border-radius: 10px;
+    transition: .2s;
+    padding: 14px 20px;
+    font-size: 18px;
+    font-weight: 700;
+    font-family: "Alan Sans", sans-serif;
+}
+
+button:hover {
+    transform: translateY(-2px);
+}
+
+/* Цвета кнопок */
+
+.add-btn,
+.create-btn,
+.shuffle-btn,
+.clear-btn {
+    background: #246d6b;
+}
+
+.close-btn {
+    background: #e74c3c;
+}
+
+/* Счётчик */
+
+.counter {
+    margin-top: 18px;
+    color: white;
+    font-weight: 800;
+    font-size: 26px;
+}
+
+/* Настройки */
+
+.settings {
+    margin-top: 25px;
+}
+
+.settings label {
+    display: block;
+    margin-bottom: 10px;
+    color: white;
+    font-weight: 800;
+    font-size: 24px;
+}
+
+.settings input {
+    width: 100%;
+}
+
+/* Кнопки слева */
+
+.actions {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-top: 25px;
+}
+
+/* Правая панель */
+
+.participants-panel {
+    flex: 1;
+    min-width: 0;
+    background: rgba(0, 0, 0, 0.25);
+    backdrop-filter: blur(12px);
+    border-radius: 20px;
+    padding: 22px;
+    box-shadow: 0 0 25px rgba(0, 0, 0, .3);
+}
+
+.participants-panel h2 {
+    text-align: center;
+    color: white;
+    margin-bottom: 22px;
+    font-size: 36px;
+    font-weight: 800;
+}
+
+/* Список участников */
+
+.participants-grid {
+    display: grid;
+    grid-template-columns:
+        repeat(auto-fill, minmax(180px, 1fr));
+    gap: 12px;
+    max-height: 65vh;
+    overflow-y: auto;
+    padding-right: 8px;
+}
+
+/* Карточка участника */
+
+.participant-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 14px;
+    border-radius: 12px;
+    background: rgba(0, 0, 0, .32);
+    color: white;
+    font-size: 20px;
+    font-weight: 700;
+    min-height: 50px;
+}
+
+/* Кнопка удаления */
+
+.delete-btn {
+    background: #b71c1c;
+    width: 34px;
+    height: 34px;
+    padding: 0;
+    font-size: 22px;
+    font-weight: bold;
+}
+
+/* Модальное окно */
+
+.modal {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, .6);
+    align-items: center;
+    justify-content: center;
+    z-index: 100;
+}
+
+/* Внутри модального окна */
+
+.modal-content {
+    width: 95vw;
+    height: 88vh;
+    background: rgba(255, 255, 255, .96);
+    border-radius: 24px;
+    padding: 35px;
+    overflow: auto;
+    box-shadow: 0 0 35px rgba(0, 0, 0, .4);
+}
+
+/* Заголовок окна */
+
+.modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 28px;
+}
+
+.modal-header h2 {
+    color: #0d5c63;
+    font-size: 40px;
+    font-weight: 800;
+}
+
+.close-btn {
+    background: #0d5c63;
+}
+
+/* Команды в окне */
+
+.teams-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+    gap: 20px;
+}
+
+/* Карточка команды */
+
+.team-card {
+    background: #eef5ff;
+    border-radius: 16px;
+    padding: 18px;
+    box-shadow: 0 0 12px rgba(0, 0, 0, .12);
+}
+
+.team-title {
+    font-size: 24px;
+    font-weight: 800;
+    margin-bottom: 12px;
+    color: #0d5c63;
+}
+
+/* Имя участника внутри команды */
+
+.member {
+    padding: 8px 0;
+    border-bottom: 1px solid rgba(0, 0, 0, .08);
+    font-size: 20px;
+    font-weight: 600;
+}
+
+/* Кнопки в модальном окне */
+
+.modal-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-top: 30px;
+}
+
+/* Адаптация */
+
+@media(max-width:1000px) {
+    body {
+        overflow: auto;
+    }
+
+    .title {
+        font-size: 58px;
+    }
+
+    .top-layout {
+        flex-direction: column;
+    }
+
+    .control-panel {
+        width: 100%;
+    }
+
+    .modal-content {
+        width: 95vw;
+        height: 92vh;
+    }
+}

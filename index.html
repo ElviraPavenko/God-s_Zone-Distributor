@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="./style.css">
+    <link rel="icon" type="img/чорний.png" href="./img/чорний.png">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Alan+Sans:wght@300..900&display=swap" rel="stylesheet">
+    <title>God's Zone</title>
+</head>
+
+<body>
+    <img class="logo" src="./img/black.png" alt="">
+    <h1 class="title">God's Zone</h1>
+    <div class="top-layout">
+        <div class="control-panel">
+            <div class="input-row">
+                <input type="text" id="participantInput" placeholder="Введите имя участника">
+                <button class="add-btn" onclick="addParticipant()">
+                    Додати
+                </button>
+            </div>
+
+            <div class="counter">
+                Учасників:
+                <span id="participantsCount">0</span>
+            </div>
+
+            <div class="settings">
+                <label>Кількість команд</label>
+                <input type="number" id="teamCount" min="1" placeholder="Например: 3">
+            </div>
+
+            <div class="actions">
+                <button class="create-btn" onclick="createTeams()">
+                    Розподілити
+                </button>
+
+                <button class="shuffle-btn" onclick="reshuffleTeams()">
+                    Перемішати заново
+                </button>
+
+                <button class="clear-btn" onclick="clearParticipants()">
+                    Очистити список
+                </button>
+            </div>
+
+        </div>
+
+        <div class="participants-panel">
+            <h2>Список учасників</h2>
+            <div id="participantsList" class="participants-grid"></div>
+        </div>
+
+    </div>
+
+    <div class="modal" id="resultModal">
+
+        <div class="modal-content">
+
+            <div class="modal-header">
+                <h2>Команди</h2>
+
+            </div>
+
+            <div id="teamsGrid" class="teams-grid"></div>
+
+            <div class="modal-actions">
+                <button class="shuffle-btn" onclick="reshuffleTeams()">
+                    Перемішати
+                </button>
+
+                <button class="create-btn" onclick="copyTeams()">
+                    Копіювати
+                </button>
+
+                <button class="close-btn" onclick="closeModal()">
+                    Повернутись до списку
+                </button>
+            </div>
+
+        </div>
+
+    </div>
+
+    <script>
+        let participants = [];
+        let lastTeamCount = 0;
+        let lastTeams = [];
+
+        const participantInput = document.getElementById("participantInput");
+        const participantsList = document.getElementById("participantsList");
+        const participantsCount = document.getElementById("participantsCount");
+        const teamCountInput = document.getElementById("teamCount");
+        const resultModal = document.getElementById("resultModal");
+        const teamsGrid = document.getElementById("teamsGrid");
+
+        participantInput.addEventListener("keydown", function (event) {
+            if (event.key === "Enter") {
+                event.preventDefault();
+                addParticipant();
+            }
+        });
+
+        function addParticipant() {
+            const name = participantInput.value.trim();
+
+            if (name === "") {
+                return;
+            }
+
+            if (participants.includes(name)) {
+                alert("Такой участник уже добавлен");
+                return;
+            }
+
+            participants.push(name);
+            participantInput.value = "";
+            participantInput.focus();
+
+            renderParticipants();
+        }
+
+        function renderParticipants() {
+            participantsList.innerHTML = "";
+
+            participants.forEach(function (person, index) {
+                participantsList.innerHTML += `
+            <div class="participant-item">
+                <span>${person}</span>
+
+                <button class="delete-btn" onclick="removeParticipant(${index})">
+                    ×
+                </button>
+            </div>
+        `;
+            });
+
+            participantsCount.textContent = participants.length;
+        }
+
+        function removeParticipant(index) {
+            participants.splice(index, 1);
+            renderParticipants();
+        }
+
+        function clearParticipants() {
+            participants = [];
+            lastTeams = [];
+            lastTeamCount = 0;
+
+            renderParticipants();
+            closeModal();
+        }
+
+        function shuffle(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+
+            return array;
+        }
+
+        function createTeams(customTeamCount = null) {
+            const teamCount = customTeamCount || parseInt(teamCountInput.value);
+
+            if (participants.length === 0) {
+                alert("Добавьте участников");
+                return;
+            }
+
+            if (!teamCount || teamCount < 1) {
+                alert("Введите количество команд");
+                return;
+            }
+
+            lastTeamCount = teamCount;
+
+            const shuffled = [...participants];
+            shuffle(shuffled);
+
+            const teams = [];
+
+            for (let i = 0; i < teamCount; i++) {
+                teams.push([]);
+            }
+
+            shuffled.forEach(function (person, index) {
+                teams[index % teamCount].push(person);
+            });
+
+            lastTeams = teams;
+
+            renderTeams();
+        }
+
+        function renderTeams() {
+            teamsGrid.innerHTML = "";
+
+            lastTeams.forEach(function (team, index) {
+                teamsGrid.innerHTML += `
+            <div class="team-card">
+                <div class="team-title">
+                    Команда ${index + 1} (${team.length})
+                </div>
+
+                ${team.map(function (member) {
+                    return `<div class="member">${member}</div>`;
+                }).join("")}
+            </div>
+        `;
+            });
+
+            resultModal.style.display = "flex";
+        }
+
+        function reshuffleTeams() {
+            if (lastTeamCount === 0) {
+                alert("Сначала распределите участников");
+                return;
+            }
+
+            createTeams(lastTeamCount);
+        }
+
+        function closeModal() {
+            resultModal.style.display = "none";
+        }
+
+        function copyTeams() {
+            if (lastTeams.length === 0) {
+                return;
+            }
+
+            let text = "";
+
+            lastTeams.forEach(function (team, index) {
+                text += `Команда ${index + 1}\n`;
+                text += team.join("\n");
+                text += "\n\n";
+            });
+
+            navigator.clipboard.writeText(text);
+
+            alert("Команды скопированы");
+        }
+    </script>
+
+</body>
+
+</html>
